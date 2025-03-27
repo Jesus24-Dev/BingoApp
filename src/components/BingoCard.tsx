@@ -1,10 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getBingoColumnNumbers } from '../utils/getRandomNumbers';
 import { checkBingo } from '../utils/bingoPatterns';
-import { BingoPattern } from '../types/bingo';
+import { BingoPattern, BingoNumber } from '../types/bingo';
 
-export function BingoCard() {
-  const [card] = useState({
+interface BingoCardProps {
+  calledNumbers: BingoNumber[];
+}
+
+type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
+type BingoCardData = Record<BingoColumn, (number | null)[]>;
+
+export function BingoCard({ calledNumbers }: BingoCardProps) {
+  const [card] = useState<BingoCardData>({
     B: getBingoColumnNumbers('B'),
     I: getBingoColumnNumbers('I'),
     N: getBingoColumnNumbers('N'),
@@ -12,20 +19,12 @@ export function BingoCard() {
     O: getBingoColumnNumbers('O')
   });
   
-  const [selectedNumbers, setSelectedNumbers] = useState<Set<number>>(new Set());
   const [winningPattern, setWinningPattern] = useState<BingoPattern | null>(null);
 
-  const handleNumberClick = (value: number | null) => {
-    if (value !== null) {
-      const newSelected = new Set(selectedNumbers);
-      if (newSelected.has(value)) {
-        newSelected.delete(value);
-      } else {
-        newSelected.add(value);
-      }
-      setSelectedNumbers(newSelected);
-    }
-  };
+  const selectedNumbers = useMemo(
+    () => new Set(calledNumbers.map(n => n.number)),
+    [calledNumbers]
+  );
 
   useEffect(() => {
     const patterns: BingoPattern[] = [
@@ -43,7 +42,11 @@ export function BingoCard() {
         break;
       }
     }
-  }, [selectedNumbers, card]);
+
+    return () => {
+      setWinningPattern(null);
+    };
+  }, [calledNumbers, card, selectedNumbers]);
 
   return (
     <section className="mx-auto max-w-sm flex flex-col items-center bg-blue-200 p-4 rounded-lg shadow-lg">
@@ -54,12 +57,11 @@ export function BingoCard() {
         </div>
       )}
       <div className="grid grid-cols-5 gap-1 mb-4">
-        {['B', 'I', 'N', 'G', 'O'].map(letter => (
+        {(Object.keys(card) as BingoColumn[]).map(letter => (
           <BingoCardColumn 
             key={letter}
             values={card[letter]} 
             selectedNumbers={selectedNumbers}
-            onNumberClick={handleNumberClick}
           />
         ))}
       </div>
@@ -67,30 +69,12 @@ export function BingoCard() {
   );
 }
 
-function BingoCardField({ value, isSelected, onClick }: { 
-  value: number | null; 
-  isSelected: boolean; 
-  onClick: () => void 
-}) {
-  return (
-    <button
-      className={`text-center text-xl h-14 w-14 border-2 border-gray-200 transition-colors ${
-        isSelected ? 'bg-blue-500 text-white' : 
-        value === null ? 'bg-gray-300 cursor-default' : 
-        'bg-white hover:bg-blue-100 text-black'
-      }`}
-      onClick={onClick}
-    >
-      {value}
-    </button>
-  );
+interface BingoCardColumnProps {
+  values: (number | null)[];
+  selectedNumbers: Set<number>;
 }
 
-function BingoCardColumn({ values, selectedNumbers, onNumberClick }: { 
-  values: number[]; 
-  selectedNumbers: Set<number>;
-  onNumberClick: (value: number | null) => void;
-}) {
+function BingoCardColumn({ values, selectedNumbers }: BingoCardColumnProps) {
   return (
     <div className="grid grid-rows-5 gap-1">
       {values.map((value, index) => (
@@ -98,9 +82,27 @@ function BingoCardColumn({ values, selectedNumbers, onNumberClick }: {
           key={`${value}-${index}`}
           value={value}
           isSelected={value !== null && selectedNumbers.has(value)}
-          onClick={() => onNumberClick(value)}
         />
       ))}
+    </div>
+  );
+}
+
+interface BingoCardFieldProps {
+  value: number | null;
+  isSelected: boolean;
+}
+
+function BingoCardField({ value, isSelected }: BingoCardFieldProps) {
+  return (
+    <div
+      className={`text-center text-xl h-14 w-14 border-2 border-gray-200 flex items-center justify-center ${
+        isSelected ? 'bg-blue-500 text-white' : 
+        value === null ? 'bg-gray-300' : 
+        'bg-white text-black'
+      }`}
+    >
+      {value}
     </div>
   );
 }
