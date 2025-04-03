@@ -9,10 +9,28 @@ export type BingoNumber = {
     letter: 'B' | 'I' | 'N' | 'G' | 'O';
     called: boolean;
 };
+
+export type BingoWinner = {
+    playerName: string;
+    pattern: string;
+};
   
 export type BingoGameState = {
     calledNumbers: BingoNumber[];
     currentNumber: BingoNumber | null;
     gameStarted: boolean;
     gameEnded: boolean;
+};
+
+export type Player = {
+    id: string;
+    name: string;
+    isHost: boolean;
+};
+
+export type GameRoom = {
+    id: string;
+    players: Player[];
+    calledNumbers: BingoNumber[];
+    status: 'waiting' | 'playing' | 'finished';
 };
