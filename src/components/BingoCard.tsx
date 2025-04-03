@@ -5,12 +5,13 @@ import { BingoPattern, BingoNumber } from '../types/bingo';
 
 interface BingoCardProps {
   calledNumbers: BingoNumber[];
+  onBingoClaimed?: (pattern: BingoPattern) => Promise<boolean>;
 }
 
 type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
 type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
-export function BingoCard({ calledNumbers }: BingoCardProps) {
+export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
   const [card] = useState<BingoCardData>({
     B: getBingoColumnNumbers('B'),
     I: getBingoColumnNumbers('I'),
@@ -35,18 +36,22 @@ export function BingoCard({ calledNumbers }: BingoCardProps) {
       'full-house'
     ];
     
-    for (const pattern of patterns) {
-      if (checkBingo(card, selectedNumbers, pattern)) {
-        setWinningPattern(pattern);
-        console.log(`¡BINGO! Patrón: ${pattern}`);
-        break;
+    const checkForBingo = async () => {
+      for (const pattern of patterns) {
+        if (checkBingo(card, selectedNumbers, pattern)) {
+          setWinningPattern(pattern);
+          const isValid = await onBingoClaimed?.(pattern) ?? false;
+          if (isValid) break;
+        }
       }
-    }
-
+    };
+  
+    checkForBingo();
+  
     return () => {
       setWinningPattern(null);
     };
-  }, [calledNumbers, card, selectedNumbers]);
+  }, [calledNumbers, card, selectedNumbers, onBingoClaimed]);
 
   return (
     <section className="mx-auto max-w-sm flex flex-col items-center bg-blue-200 p-4 rounded-lg shadow-lg">
