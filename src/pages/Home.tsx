@@ -1,10 +1,11 @@
-import { LinkButton } from "../components/LinkButton"
+import { RoomLobby } from "../components/RoomLobby";
+import BingoLayout from "../layout/BingoLayout";
 
 export function Home(){
+
     return (
-        <>
-            <h1>Home page</h1>
-            <LinkButton content="Ir a partida" linkTo="/match"/>
-        </>
+        <BingoLayout>
+                <RoomLobby/>    
+        </BingoLayout>
     )
 }
