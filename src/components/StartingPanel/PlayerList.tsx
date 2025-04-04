@@ -1,4 +1,4 @@
-import { Player } from '../types/bingo';
+import { Player } from '../../types/bingo';
 
 interface PlayerListProps {
     players: Player[];

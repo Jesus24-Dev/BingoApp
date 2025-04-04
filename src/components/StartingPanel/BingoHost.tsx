@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BingoNumber } from '../types/bingo';
+import { BingoNumber } from '../../types/bingo';
 
 interface BingoHostProps {
   onNumberCalled: (number: BingoNumber) => void;

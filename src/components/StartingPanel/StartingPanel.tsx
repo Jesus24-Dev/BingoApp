@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useSocket } from "../hooks/useSocket";
-import { BingoHost } from "../components/BingoHost";
-import WinnerBanner from "../components/WinnerBanner";
-import { BingoCard } from "../components/BingoCard/BingoCard";
-import { PlayerList } from "../components/PlayerList";
-import {GameRoom, BingoNumber, BingoWinner, BingoPattern} from "../types/bingo";
-import useRoom from "../hooks/useRoom";
+import { useSocket } from "../../hooks/useSocket";
+import { BingoHost } from "./BingoHost";
+import WinnerBanner from "./WinnerBanner";
+import { BingoCard } from "./BingoCard/BingoCard";
+import { PlayerList } from "./PlayerList";
+import {GameRoom, BingoNumber, BingoWinner, BingoPattern} from "../../types/bingo";
+import useRoom from "../../hooks/useRoom";
 
 function StartingPanel() {
     const [winner, setWinner] = useState<BingoWinner | null>(null);

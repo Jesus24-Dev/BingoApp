@@ -1,4 +1,4 @@
-import { BingoWinner } from "../types/bingo";
+import { BingoWinner } from "../../types/bingo";
 
 interface WinnerBannerProps {
     winner: BingoWinner | null; 

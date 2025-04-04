@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBingoColumnNumbers } from '../../utils/getRandomNumbers';
-import { checkBingo } from '../../utils/bingoPatterns';
-import { BingoPattern, BingoNumber } from '../../types/bingo';
+import { getBingoColumnNumbers } from '../../../utils/getRandomNumbers';
+import { checkBingo } from '../../../utils/bingoPatterns';
+import { BingoPattern, BingoNumber } from '../../../types/bingo';
 import { BingoCardColumn } from './BingoCardColumn';
 
 interface BingoCardProps {
