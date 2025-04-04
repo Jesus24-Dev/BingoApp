@@ -15,9 +15,17 @@ import { GameRoom } from '../types/bingo';
       }
     };
 
+    const handlePlayerName = (event: React.ChangeEvent<HTMLInputElement>) =>{
+      setPlayerName(event.target.value);
+    }
+
+    const handleRoomId = (event: React.ChangeEvent<HTMLInputElement>) =>{
+      setRoomId(event.target.value);
+    }
+
     const joinRoom = (roomId: string, playerName: string) => {
             if (!socket || !roomId.trim() || !playerName.trim()) return;
-        
+
             socket.emit(
               "join_room",
               roomId,
@@ -29,13 +37,11 @@ import { GameRoom } from '../types/bingo';
                 room?: GameRoom;
               }) => {
                 if (response.success && response.room) {
-                  localStorage.setItem('playerName', playerName);
-                  localStorage.setItem('roomId', roomId);
                   localStorage.setItem('room', JSON.stringify(response.room));
                   localStorage.setItem('isHost', response.isHost.toString());
-                  localStorage.setItem('calledNumbers', JSON.stringify(response.room.calledNumbers));
                 } else {
-                  alert(response.error || "Error al unirse a la sala");
+                  console.error(response.error || "Error al unirse a la sala");
+                  console.error(response.success)
                 }
               }
             );
@@ -59,7 +65,7 @@ import { GameRoom } from '../types/bingo';
                 type="text"
                 placeholder="Ej: Juan Pérez"
                 value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
+                onChange={handlePlayerName}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -73,7 +79,7 @@ import { GameRoom } from '../types/bingo';
                 type="text"
                 placeholder="Ej: SALA123"
                 value={roomId}
-                onChange={(e) => setRoomId(e.target.value)}
+                onChange={handleRoomId}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
