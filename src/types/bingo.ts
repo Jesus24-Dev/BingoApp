@@ -34,3 +34,7 @@ export type GameRoom = {
     calledNumbers: BingoNumber[];
     status: 'waiting' | 'playing' | 'finished';
 };
+
+export type StatusBarProps = {
+    connectionStatus: 'connecting' | 'connected' | 'disconnected'
+}
