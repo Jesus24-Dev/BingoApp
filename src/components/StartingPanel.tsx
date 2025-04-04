@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSocket } from "../hooks/useSocket";
 import { BingoHost } from "../components/BingoHost";
 import WinnerBanner from "../components/WinnerBanner";
-import { BingoCard } from "../components/BingoCard";
+import { BingoCard } from "../components/BingoCard/BingoCard";
 import { PlayerList } from "../components/PlayerList";
 import {GameRoom, BingoNumber, BingoWinner, BingoPattern} from "../types/bingo";
 import useRoom from "../hooks/useRoom";

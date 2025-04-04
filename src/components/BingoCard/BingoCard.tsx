@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBingoColumnNumbers } from '../utils/getRandomNumbers';
-import { checkBingo } from '../utils/bingoPatterns';
-import { BingoPattern, BingoNumber } from '../types/bingo';
+import { getBingoColumnNumbers } from '../../utils/getRandomNumbers';
+import { checkBingo } from '../../utils/bingoPatterns';
+import { BingoPattern, BingoNumber } from '../../types/bingo';
+import { BingoCardColumn } from './BingoCardColumn';
 
 interface BingoCardProps {
   calledNumbers: BingoNumber[];
@@ -71,43 +72,5 @@ export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
         ))}
       </div>
     </section>
-  );
-}
-
-interface BingoCardColumnProps {
-  values: (number | null)[];
-  selectedNumbers: Set<number>;
-}
-
-function BingoCardColumn({ values, selectedNumbers }: BingoCardColumnProps) {
-  return (
-    <div className="grid grid-rows-5 gap-1">
-      {values.map((value, index) => (
-        <BingoCardField 
-          key={`${value}-${index}`}
-          value={value}
-          isSelected={value !== null && selectedNumbers.has(value)}
-        />
-      ))}
-    </div>
-  );
-}
-
-interface BingoCardFieldProps {
-  value: number | null;
-  isSelected: boolean;
-}
-
-function BingoCardField({ value, isSelected }: BingoCardFieldProps) {
-  return (
-    <div
-      className={`text-center text-xl h-14 w-14 border-2 border-gray-200 flex items-center justify-center ${
-        isSelected ? 'bg-blue-500 text-white' : 
-        value === null ? 'bg-gray-300' : 
-        'bg-white text-black'
-      }`}
-    >
-      {value}
-    </div>
   );
 }
