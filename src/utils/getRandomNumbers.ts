@@ -1,6 +1,6 @@
 import random from 'random';
 
-export function getRandomNumbers(count: number, min: number, max: number): number[] {
+function getRandomNumbers(count: number, min: number, max: number): number[] {
   const numbers = new Set<number>();
   
   const availableNumbers = max - min + 1;
