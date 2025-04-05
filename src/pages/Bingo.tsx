@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BingoLayout from "../layout/BingoLayout";
 import { RoomLobby } from "../components/RoomLobby";
-import StartingPanel from "../components/StartingPanel/StartingPanel"
+import StartingPanel from "../components/StartingPanel/BingoHost/StartingPanel"
 import { useSocket } from "../hooks/useSocket";
 function Bingo() {
 
