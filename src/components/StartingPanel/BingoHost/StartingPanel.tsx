@@ -55,12 +55,11 @@ function StartingPanel({socket}: StartingPanelProps) {
             socket?.emit("reset_bingo", room.id);
         }
     }
-  
     if (!room) { return null; } 
 
     return (
         <>       
-          {winner && <WinnerBanner winner={winner} />}
+          {winner?.length !== 0 && <WinnerBanner winner={winner} />}
           {/* Layout del juego */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Columna izquierda - Host y controles */}
