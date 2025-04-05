@@ -6,6 +6,7 @@ interface BingoHostProps {
   onResetRequest?: () => void;
   onResetBingo?: () => void;
   onStartGame?: () => void;
+  onNumbersCalledLength?: (length: number) => void;
   isHost: boolean;
   initialNumbers?: BingoNumber[];
   gameStatus: 'waiting' | 'playing' | 'finished';
