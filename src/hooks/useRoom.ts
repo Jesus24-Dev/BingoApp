@@ -6,7 +6,7 @@ const useRoom = (socket: Socket | null) => {
     const [room, setRoom] = useState<GameRoom | null>(null);
     const [isHost, setIsHost] = useState<boolean>(false);
     const [player, setPlayer] = useState<Player | null>(null);
-    const [winner, setWinner] = useState<BingoWinner | null>(null);
+    const [winner, setWinner] = useState<BingoWinner[] | null>([]);
     const [calledNumbers, setCalledNumbers] = useState<BingoNumber[]>([]);
     const [currentNumber, setCurrentNumber] = useState<BingoNumber | null>(null); 
     const [hasJoined, setHasJoined] = useState<boolean>(false);
@@ -62,7 +62,11 @@ const useRoom = (socket: Socket | null) => {
         });
 
         socket.on("bingo_claimed", (winner: BingoWinner) => {   
-            setWinner(winner);
+            if (!winner) {
+                setWinner(null);
+                return;
+            } 
+            setWinner(prev => prev ? [...prev, winner] : [winner]);
         })
 
     }, [socket, hasJoined]); 
