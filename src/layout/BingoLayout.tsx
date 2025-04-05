@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSocket } from "../hooks/useSocket";
+import { Socket } from "socket.io-client";
 import StatusBar from "../components/StatusBar";
 
 interface BingoLayoutProps {
     children: React.ReactNode;
+    socket: Socket | null;
 }
 
-function BingoLayout({ children }: BingoLayoutProps) {
-
-    const socket = useSocket('http://localhost:3001');
+function BingoLayout({ children, socket }: BingoLayoutProps) {
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
       useEffect(() => {
         if (!socket) return;
