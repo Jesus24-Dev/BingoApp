@@ -1,20 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSocket } from "../hooks/useSocket";
-import { GameRoom } from '../types/bingo';
 
-  export function RoomLobby() {
-    const socket = useSocket('http://localhost:3001');
+type RoomLobbyProps = {
+  handleLogin: () => void;
+}
+
+  export function RoomLobby({handleLogin}: RoomLobbyProps) {
     const [roomId, setRoomId] = useState('');
     const [playerName, setPlayerName] = useState('');
-    const navigate = useNavigate()
-  
-    const handleJoin = () => {
-      if (roomId.trim() && playerName.trim()) {
-        joinRoom(roomId, playerName);
-      }
-    };
-
     const handlePlayerName = (event: React.ChangeEvent<HTMLInputElement>) =>{
       setPlayerName(event.target.value);
     }
@@ -23,30 +15,21 @@ import { GameRoom } from '../types/bingo';
       setRoomId(event.target.value);
     }
 
-    const joinRoom = (roomId: string, playerName: string) => {
-            if (!socket || !roomId.trim() || !playerName.trim()) return;
-
-            socket.emit(
-              "join_room",
-              roomId,
-              playerName,
-              (response: {
-                success: boolean;
-                isHost: boolean;
-                error?: string;
-                room?: GameRoom;
-              }) => {
-                if (response.success && response.room) {
-                  localStorage.setItem('room', JSON.stringify(response.room));
-                  localStorage.setItem('isHost', response.isHost.toString());
-                } else {
-                  console.error(response.error || "Error al unirse a la sala");
-                  console.error(response.success)
-                }
-              }
-            );
-            navigate('/match')
-          };
+          const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            const response = await fetch('http://localhost:3001/room', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ roomId, playerName })
+            });
+    
+            const data = await response.json();
+            if (data.success) {
+                localStorage.setItem('roomId', data.roomId); 
+                localStorage.setItem('player', JSON.stringify(data.player));
+            }
+            handleLogin();
+          }
 
     return (
       <div className="flex items-center justify-center min-h-[80vh]">
@@ -66,31 +49,35 @@ import { GameRoom } from '../types/bingo';
                 placeholder="Ej: Juan Pérez"
                 value={playerName}
                 onChange={handlePlayerName}
+                name='playerName'
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-    
-            <div>
-              <label htmlFor="roomId" className="block text-sm font-medium text-gray-700 mb-1">
-                ID de Sala
-              </label>
-              <input
-                id="roomId"
-                type="text"
-                placeholder="Ej: SALA123"
-                value={roomId}
-                onChange={handleRoomId}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-    
-            <button
-              onClick={handleJoin}
-              disabled={!roomId.trim() || !playerName.trim()}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              Unirse a Sala
-            </button>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="roomId" className="block text-sm font-medium text-gray-700 mb-1">
+                  ID de Sala
+                </label>
+                <input
+                  id="roomId"
+                  type="text"
+                  placeholder="Ej: SALA123"
+                  value={roomId}
+                  onChange={handleRoomId}
+                  name='roomId'
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+      
+              <button
+                type='submit'
+                disabled={!roomId.trim() || !playerName.trim()}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold my-2 py-3 px-4 rounded-md transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                Unirse a Sala
+              </button>
+            </form>
+            
           </div>
         </div>
       </div>
