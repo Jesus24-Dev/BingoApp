@@ -11,8 +11,11 @@ export type BingoNumber = {
 };
 
 export type BingoWinner = {
-    playerName: string;
-    pattern: string;
+    winner: {
+        playerId: string;
+        playerName: string;
+        pattern: string;
+    } 
 };
   
 export type BingoGameState = {
