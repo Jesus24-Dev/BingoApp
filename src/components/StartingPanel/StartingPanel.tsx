@@ -1,18 +1,19 @@
-import { useState, useEffect } from "react";
-import { useSocket } from "../../hooks/useSocket";
+import { Socket } from "socket.io-client";
 import { BingoHost } from "./BingoHost";
 import WinnerBanner from "./WinnerBanner";
 import { BingoCard } from "./BingoCard/BingoCard";
 import { PlayerList } from "./PlayerList";
-import {GameRoom, BingoNumber, BingoWinner, BingoPattern} from "../../types/bingo";
+import {BingoNumber, BingoPattern} from "../../types/bingo";
 import useRoom from "../../hooks/useRoom";
 
-function StartingPanel() {
-    const [winner, setWinner] = useState<BingoWinner | null>(null);
-    const [currentNumber, setCurrentNumber] = useState<BingoNumber | null>(null);
-    const socket = useSocket("http://localhost:3001");
+type StartingPanelProps = {
+    socket: Socket | null;  
+}
 
-    const {room, setRoom, isHost, calledNumbers, setCalledNumbers} = useRoom();
+function StartingPanel({socket}: StartingPanelProps) {
+
+  //TODO: Conectar el socket para establecer estas funciones
+    const {room, isHost, calledNumbers, currentNumber, winner} = useRoom(socket);
 
     // Iniciar juego (solo host)
     const startGame = () => {
@@ -33,58 +34,23 @@ function StartingPanel() {
     // Cantar BINGO
     const claimBingo = (pattern: BingoPattern) => {
         return new Promise<boolean>((resolve) => {
-        if (!room || !socket) {
-            resolve(false);
-            return;
-        }
+          if (!room || !socket) {
+              resolve(false);
+              return;
+          }
 
-        socket.emit("claim_bingo", room.id, pattern, (isValid: boolean) => {
-            if (isValid) {
-            console.log("BINGO validado correctamente");
-            } else {
-            console.log("BINGO no fue validado");
-            }
-            resolve(isValid);
-        });
+          socket.emit("claim_bingo", room.id, pattern, (isValid: boolean) => {
+              if (isValid) {
+              console.log("BINGO validado correctamente");
+              } else {
+              console.log("BINGO no fue validado");
+              }
+              resolve(isValid);
+          });
         });
     };
-
-    useEffect(() => {
-        if (!socket) return;
-    
-        const onRoomUpdate = (updatedRoom: GameRoom) => {
-          setRoom(updatedRoom);
-          setCalledNumbers(updatedRoom.calledNumbers);
-        };
-    
-        const onNumberCalled = (number: BingoNumber) => {
-          setCurrentNumber(number);
-          setCalledNumbers((prev) => [...prev, number]);
-        };
-    
-        const onGameStarted = (room: GameRoom) => {
-          setRoom(room);
-          setWinner(null);
-        };
-    
-        const onBingoClaimed = (winnerInfo: BingoWinner) => {
-          setWinner(winnerInfo);
-        };
-    
-        socket.on("room_update", onRoomUpdate);
-        socket.on("number_called", onNumberCalled);
-        socket.on("game_started", onGameStarted);
-        socket.on("bingo_claimed", onBingoClaimed);
-    
-        return () => {
-          socket.off("room_update", onRoomUpdate);
-          socket.off("number_called", onNumberCalled);
-          socket.off("game_started", onGameStarted);
-          socket.off("bingo_claimed", onBingoClaimed);
-        };
-      }, [socket, setRoom, setCalledNumbers]);
-
-      if (!room) { return null; } 
+  
+    if (!room) { return null; } 
 
     return (
         <>       
@@ -104,7 +70,6 @@ function StartingPanel() {
               {room.status === "waiting" && isHost && (
                 <button
                   onClick={startGame}
-                  disabled={room.players.length < 2}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-6 rounded-lg font-bold text-lg shadow-md transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {room.players.length < 2
@@ -122,7 +87,6 @@ function StartingPanel() {
                   onBingoClaimed={claimBingo}
                 />
               </div>
-
               <div className="bg-white p-4 rounded-xl shadow-md">
                 <PlayerList
                   players={room.players}
