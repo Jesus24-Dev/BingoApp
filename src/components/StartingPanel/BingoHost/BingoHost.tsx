@@ -96,9 +96,9 @@ export function BingoHost({
     onResetBingo?.();
     setCalledNumbers([]);
     setInternalCurrentNumber(null);
-    
   }, [onResetBingo, isHost]);
 
+  const message = isHost ? 'Presiona "Llamar número"' : 'Esperando a que el anfitrión llame un número...';
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-auto">
@@ -122,7 +122,7 @@ export function BingoHost({
           <p className="text-gray-500 py-8">
             {gameStatus === 'waiting' 
               ? 'Esperando al anfitrión...' 
-              : 'Presiona "Llamar número"'}
+              : message}
           </p>
         )}
       </div>
@@ -148,7 +148,7 @@ export function BingoHost({
               className={`py-3 px-6 rounded-lg font-medium text-lg ${
                 availableNumbers.length === 0 || !gameStarted
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white cursor-pointer'
               }`}
             >
               {availableNumbers.length === 0 
@@ -158,7 +158,7 @@ export function BingoHost({
                   : 'Llamar Número'}
             </button>
           )}
-          <button onClick={resetBingo}> Reiniciar bingo</button>
+          <button onClick={resetBingo} className={'py-3 px-6 rounded-lg font-medium text-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white cursor-pointer'}> Reiniciar bingo</button>
         </div>
       )}
       {calledNumbers.length > 0 && (
