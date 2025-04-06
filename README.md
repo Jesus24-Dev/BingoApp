@@ -31,12 +31,12 @@ Sigue estos pasos para configurar el proyecto en tu entorno local:
 ```
     
 3. **Instala las dependencias:**
-    ```bash
+ ```bash
   npm install
 ```
     
 4. **Inicia el servidor de desarrollo:**
-    ```bash
+```bash
   npm run dev
 ```
     
