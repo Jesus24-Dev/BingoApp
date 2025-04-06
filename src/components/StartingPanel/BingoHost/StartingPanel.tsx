@@ -59,7 +59,7 @@ function StartingPanel({socket}: StartingPanelProps) {
 
     return (
         <>       
-          {winner?.length !== 0 && <WinnerBanner winner={winner} />}
+          {winner?.length !== 0 && <WinnerBanner winner={winner} isHost={isHost} />}
           {/* Layout del juego */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Columna izquierda - Host y controles */}
