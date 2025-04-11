@@ -27,6 +27,7 @@ type RoomLobbyProps = {
             if (data.success) {
                 localStorage.setItem('roomId', data.roomId); 
                 localStorage.setItem('player', JSON.stringify(data.player));
+                localStorage.setItem('token', data.token);
             }
             handleLogin();
           }
