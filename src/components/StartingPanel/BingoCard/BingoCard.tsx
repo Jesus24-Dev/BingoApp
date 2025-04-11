@@ -13,14 +13,31 @@ type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
 type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
 export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
-  const [card] = useState<BingoCardData>({
-    B: getBingoColumnNumbers('B'),
-    I: getBingoColumnNumbers('I'),
-    N: getBingoColumnNumbers('N'),
-    G: getBingoColumnNumbers('G'),
-    O: getBingoColumnNumbers('O')
+
+  const [card] = useState<BingoCardData>(() => {
+    const savedCard = localStorage.getItem('bingoCardData');
+    
+    if (savedCard) {
+      try {
+        const parsedCard = JSON.parse(savedCard) as BingoCardData;
+        if (parsedCard.B && parsedCard.I && parsedCard.N && parsedCard.G && parsedCard.O) {
+          return parsedCard;
+        }
+      } catch (e) {
+        console.error('Error al parsear bingoCardData del localStorage', e);
+      }
+    }
+    return {
+      B: getBingoColumnNumbers('B'),
+      I: getBingoColumnNumbers('I'),
+      N: getBingoColumnNumbers('N'),
+      G: getBingoColumnNumbers('G'),
+      O: getBingoColumnNumbers('O')
+    };
   });
-  
+
+  localStorage.setItem('bingoCardData', JSON.stringify(card));
+
   const [winningPattern, setWinningPattern] = useState<BingoPattern | null>(null);
 
   const selectedNumbers = useMemo(
