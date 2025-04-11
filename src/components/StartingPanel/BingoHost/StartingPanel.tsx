@@ -83,12 +83,14 @@ function StartingPanel({socket}: StartingPanelProps) {
                   onBingoClaimed={claimBingo}
                 />
               </div>
-              <div className="bg-white p-4 rounded-xl shadow-md">
-                <PlayerList
-                  players={room.players}
-                  currentPlayerId={socket?.id || ""}
-                />
-              </div>
+              {isHost && (
+                  <div className="bg-white p-4 rounded-xl shadow-md">
+                  <PlayerList
+                    players={room.players}
+                    currentPlayerId={socket?.id || ""}
+                  />
+                </div>
+              )}           
             </div>
           </div>
         </>
