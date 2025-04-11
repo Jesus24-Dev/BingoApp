@@ -3,16 +3,24 @@ import { useEffect, useState } from 'react';
 
 export const useSocket = (url: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [token, setToken] = useState<string | null>('')
 
   useEffect(() => {
-    const socketIo = io(url);
+
+    setToken(localStorage.getItem('token'))
+
+    const socketIo = io(url, {
+      auth: {
+        token: token
+      }
+    });
 
     setSocket(socketIo);
 
     return () => {
       socketIo.disconnect();
     };
-  }, [url]);
+  }, [url, token]);
 
-  return socket;
+  return {socket, token};
 };
