@@ -29,7 +29,6 @@ type RoomLobbyProps = {
                       localStorage.setItem('token', data.token);
                       handleLogin()
                   } else {
-                    console.log(roomId)
                     if(roomId && bingoCard){
                       localStorage.setItem('roomId', roomId); 
                       localStorage.setItem('player', JSON.stringify(data.player));

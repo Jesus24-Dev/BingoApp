@@ -41,11 +41,6 @@ function StartingPanel({socket}: StartingPanelProps) {
           }
 
           socket.emit("claim_bingo", room.id, pattern, (isValid: boolean) => {
-              if (isValid) {
-              console.log("BINGO validado correctamente");
-              } else {
-              console.log("BINGO no fue validado");
-              }
               resolve(isValid);
           });
         });

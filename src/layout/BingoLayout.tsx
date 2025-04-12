@@ -13,12 +13,10 @@ function BingoLayout({ children, socket }: BingoLayoutProps) {
         if (!socket) return;
     
         const onConnect = () => {
-          console.log('Conectado al servidor');
           setConnectionStatus('connected');
         };
     
         const onDisconnect = () => {
-          console.log('Desconectado del servidor');
           setConnectionStatus('disconnected');
         };
     
