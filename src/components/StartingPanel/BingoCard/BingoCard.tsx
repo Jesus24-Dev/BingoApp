@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBingoColumnNumbers } from '../../../utils/getRandomNumbers';
 import { checkBingo } from '../../../utils/bingoPatterns';
 import { BingoPattern, BingoNumber } from '../../../types/bingo';
 import { BingoCardColumn } from './BingoCardColumn';
+import { createBingoCard } from '../../../utils/createBingoCard';
+import { useSearchParams } from 'react-router-dom';
 
 interface BingoCardProps {
   calledNumbers: BingoNumber[];
@@ -14,30 +15,11 @@ type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
 export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
 
-  const [card] = useState<BingoCardData>(() => {
-    const savedCard = localStorage.getItem('bingoCardData');
-    
-    if (savedCard) {
-      try {
-        const parsedCard = JSON.parse(savedCard) as BingoCardData;
-        if (parsedCard.B && parsedCard.I && parsedCard.N && parsedCard.G && parsedCard.O) {
-          return parsedCard;
-        }
-      } catch (e) {
-        console.error('Error al parsear bingoCardData del localStorage', e);
-      }
-    }
-    return {
-      B: getBingoColumnNumbers('B'),
-      I: getBingoColumnNumbers('I'),
-      N: getBingoColumnNumbers('N'),
-      G: getBingoColumnNumbers('G'),
-      O: getBingoColumnNumbers('O')
-    };
-  });
+  const [searchParams] = useSearchParams();
+  const bingoCard = searchParams.get('bingoCard');
 
-  localStorage.setItem('bingoCardData', JSON.stringify(card));
-
+  const [card] = useState<BingoCardData>(createBingoCard(bingoCard));
+  
   const [winningPattern, setWinningPattern] = useState<BingoPattern | null>(null);
 
   const selectedNumbers = useMemo(
