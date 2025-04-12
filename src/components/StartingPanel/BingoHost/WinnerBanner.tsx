@@ -17,7 +17,7 @@ const WinnerBanner = ({ winner, isHost }: WinnerBannerProps) => {
     })
 
     return (
-        <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-center p-4 mb-6 rounded-lg shadow-lg animate-pulse">
+        <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-center p-4 mb-6 rounded-lg shadow-lg animate-pulse fixed">
             <h2 className="text-2xl font-bold">🎉 ¡BINGO! 🎉</h2>
             {isHost && uniqueWinners.length > 0  && (
                 <>
