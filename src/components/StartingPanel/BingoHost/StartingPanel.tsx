@@ -5,6 +5,7 @@ import { BingoCard } from "../BingoCard/BingoCard";
 import { PlayerList } from "./PlayerList";
 import {BingoNumber, BingoPattern} from "../../../types/bingo";
 import useRoom from "../../../hooks/useRoom";
+import PlayerInvitationList from "./PlayerInvitationList";
 
 type StartingPanelProps = {
     socket: Socket | null;  
@@ -64,6 +65,7 @@ function StartingPanel({socket}: StartingPanelProps) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Columna izquierda - Host y controles */}
             <div className="lg:col-span-2 space-y-6">
+              {isHost && <PlayerInvitationList/>}    
               <BingoHost
                 isHost={isHost}
                 gameStatus={room.status}
@@ -83,12 +85,14 @@ function StartingPanel({socket}: StartingPanelProps) {
                   onBingoClaimed={claimBingo}
                 />
               </div>
-              <div className="bg-white p-4 rounded-xl shadow-md">
-                <PlayerList
-                  players={room.players}
-                  currentPlayerId={socket?.id || ""}
-                />
-              </div>
+              {isHost && (
+                  <div className="bg-white p-4 rounded-xl shadow-md">
+                  <PlayerList
+                    players={room.players}
+                    currentPlayerId={socket?.id || ""}
+                  />
+                </div>
+              )}           
             </div>
           </div>
         </>

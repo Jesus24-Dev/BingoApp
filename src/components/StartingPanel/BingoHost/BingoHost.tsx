@@ -101,7 +101,7 @@ export function BingoHost({
   const message = isHost ? 'Presiona "Llamar número"' : 'Esperando a que el anfitrión llame un número...';
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-auto">
+    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-auto flex-1">
       <h2 className="text-2xl font-bold text-center mb-6">
         {isHost ? 'Anfitrión del Bingo' : 'Panel de Control'}
       </h2>

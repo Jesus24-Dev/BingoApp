@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getBingoColumnNumbers } from '../../../utils/getRandomNumbers';
 import { checkBingo } from '../../../utils/bingoPatterns';
 import { BingoPattern, BingoNumber } from '../../../types/bingo';
 import { BingoCardColumn } from './BingoCardColumn';
+import { createBingoCard } from '../../../utils/createBingoCard';
+import { useSearchParams } from 'react-router-dom';
 
 interface BingoCardProps {
   calledNumbers: BingoNumber[];
@@ -13,13 +14,11 @@ type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
 type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
 export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
-  const [card] = useState<BingoCardData>({
-    B: getBingoColumnNumbers('B'),
-    I: getBingoColumnNumbers('I'),
-    N: getBingoColumnNumbers('N'),
-    G: getBingoColumnNumbers('G'),
-    O: getBingoColumnNumbers('O')
-  });
+
+  const [searchParams] = useSearchParams();
+  const bingoCard = searchParams.get('bingoCard');
+
+  const [card] = useState<BingoCardData>(createBingoCard(bingoCard));
   
   const [winningPattern, setWinningPattern] = useState<BingoPattern | null>(null);
 

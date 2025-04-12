@@ -1,21 +1,18 @@
-import { useState } from "react";
 import BingoLayout from "../layout/BingoLayout";
 import { RoomLobby } from "../components/RoomLobby";
 import StartingPanel from "../components/StartingPanel/BingoHost/StartingPanel"
 import { useSocket } from "../hooks/useSocket";
+
 function Bingo() {
+    const {socket, logged, setIsLogged} = useSocket(import.meta.env.VITE_SOCKET_URL)
 
-    const socket = useSocket("http://localhost:3001")
-
-    const [login, setLogin] = useState(false)
-
-    const handleLogin = () => {
-        setLogin(true)
+    const handleLogin = () => {        
+        setIsLogged(true);
     }
 
     return (
         <BingoLayout socket={socket}>
-            {!login ? <RoomLobby handleLogin={handleLogin}/>: <StartingPanel socket={socket}/>}                                
+            {!logged ? <RoomLobby handleLogin={handleLogin}/> : <StartingPanel socket={socket}/>}                               
         </BingoLayout>
     );
 }
