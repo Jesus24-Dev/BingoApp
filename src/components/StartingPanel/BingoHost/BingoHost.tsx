@@ -32,19 +32,6 @@ export function BingoHost({
 
   const currentNumber = externalCurrentNumber !== undefined ? externalCurrentNumber : internalCurrentNumber;
 
-  // Inicialización más robusta
-  useEffect(() => {
-    if (initialNumbers.length > 0) {
-      setCalledNumbers(initialNumbers);
-      setInternalCurrentNumber(initialNumbers[initialNumbers.length - 1]);
-      
-      // Si hay números iniciales, asumimos que el juego ya comenzó
-      if (initialNumbers.length > 0 && !gameStarted) {
-        setGameStarted(true);
-      }
-    }
-  }, [initialNumbers, gameStarted]);
-
   const generateBingoNumbers = useCallback(() => {
     const numbers: BingoNumber[] = [];
     const ranges = {
@@ -63,6 +50,23 @@ export function BingoHost({
 
     return numbers.sort(() => Math.random() - 0.5);
   }, []);
+
+  useEffect(() => {
+    if (initialNumbers.length > 0) {
+      setCalledNumbers(initialNumbers);
+      setInternalCurrentNumber(initialNumbers[initialNumbers.length - 1]);
+  
+      const allNumbers = generateBingoNumbers();
+      const calledSet = new Set(initialNumbers.map(n => `${n.letter}-${n.number}`));
+      const remainingNumbers = allNumbers.filter(n => !calledSet.has(`${n.letter}-${n.number}`));
+      setAvailableNumbers(remainingNumbers);
+  
+      // Si hay números iniciales, asumimos que el juego ya comenzó
+      if (!gameStarted) {
+        setGameStarted(true);
+      }
+    }
+  }, [initialNumbers, gameStarted, generateBingoNumbers]);
 
   const startGame = useCallback(() => {
     if (!isHost) return;
@@ -161,7 +165,7 @@ export function BingoHost({
           <button onClick={resetBingo} className={'py-3 px-6 rounded-lg font-medium text-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white cursor-pointer'}> Reiniciar bingo</button>
         </div>
       )}
-      {calledNumbers.length > 0 && (
+      {calledNumbers.length > 0 && isHost === false && (
         <div className="mt-8">
           <h3 className="font-semibold mb-2">Números llamados:</h3>
           <div className="grid grid-cols-5 gap-2 max-h-40 overflow-y-auto p-2 bg-gray-100 rounded">
