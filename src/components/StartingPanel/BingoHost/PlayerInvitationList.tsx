@@ -23,9 +23,8 @@ function PlayerInvitationList() {
         }     
     }, [])
     return (
-        <div className="max-w-48">
             <CopyLinkButton linkToCopy={`${currentUrl}?roomId=${roomId}&bingoCard=${bingoCardDataString}`} loadNewCard={updateCard}/>
-        </div>
+
     );
 }
 
