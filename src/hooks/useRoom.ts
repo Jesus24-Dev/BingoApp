@@ -46,8 +46,9 @@ const useRoom = (socket: Socket | null) => {
                 }
             }
         );
-        socket.on("room_update", (updatedRoom: GameRoom) => {   
+        socket.on("room_update", (updatedRoom: GameRoom) => {
             setRoom(updatedRoom);
+            localStorage.setItem('room', JSON.stringify(updatedRoom));   
             setCalledNumbers(updatedRoom.calledNumbers);
         });    
 
