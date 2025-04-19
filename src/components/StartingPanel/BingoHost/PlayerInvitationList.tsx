@@ -23,8 +23,7 @@ function PlayerInvitationList() {
         }     
     }, [])
     return (
-            <CopyLinkButton linkToCopy={`${currentUrl}?roomId=${roomId}&bingoCard=${bingoCardDataString}`} loadNewCard={updateCard}/>
-
+         <CopyLinkButton linkToCopy={`${currentUrl}?roomId=${roomId}&bingoCard=${bingoCardDataString}`} loadNewCard={updateCard}/>
     );
 }
 
