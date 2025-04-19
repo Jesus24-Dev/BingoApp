@@ -55,7 +55,7 @@ export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
 
   return (
     <section className="mx-auto max-w-sm flex flex-col items-center bg-blue-200 p-4 rounded-lg shadow-lg">
-      <h1 className="text-center text-6xl tracking-wider text-white font-bold mb-4">B I N G O</h1>
+      <h1 className="text-center text-5xl tracking-wider text-white font-bold mb-4">B I N G O</h1>
       {winningPattern && (
         <div className="mb-4 p-2 bg-yellow-400 text-black font-bold rounded">
           ¡BINGO! ({winningPattern})

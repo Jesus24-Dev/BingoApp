@@ -26,7 +26,7 @@ const CopyLinkButton = ({ linkToCopy, loadNewCard }: CopyLinkButton ) => {
   return (
     <button
       onClick={handleCopyClick}
-      className={`px-4 py-2 rounded-md flex items-center gap-2 ${
+      className={`px-4 py-2 rounded-md flex items-center gap-2 max-h-10 ${
         isCopied 
           ? 'bg-green-500 text-white' 
           : 'bg-blue-500 hover:bg-blue-600 text-white'
