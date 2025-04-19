@@ -7,6 +7,7 @@ import { BingoNumber, BingoPattern } from "../../../types/bingo";
 import useRoom from "../../../hooks/useRoom";
 import PlayerInvitationList from "./PlayerInvitationList";
 import { BingoBoard } from "../BingoCard/BingoBoard";
+import { v4 as uuidv4 } from 'uuid';
 
 type StartingPanelProps = {
   socket: Socket | null;
@@ -52,6 +53,13 @@ function StartingPanel({ socket }: StartingPanelProps) {
       socket?.emit("reset_bingo", room.id);
     }
   };
+
+  const createNewRoom = () => {
+    const uuidRoom = uuidv4();
+    if (room && isHost) {
+      socket?.emit("changeIdRoom", uuidRoom)
+    }
+  }
   if (!room) {
     return null;
   }
@@ -66,6 +74,7 @@ function StartingPanel({ socket }: StartingPanelProps) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6 flex">
               <PlayerInvitationList />
+              <button onClick={createNewRoom} className="bg-blue-500 text-white p-4 max-h-10">Generar nueva sala</button>
               <BingoHost
                 isHost={isHost}
                 gameStatus={room.status}
