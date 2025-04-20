@@ -11,7 +11,7 @@ export function PlayerList({ players, currentPlayerId }: PlayerListProps) {
   );
 
   return (
-    <div>
+    <div className="overflow-auto max-h-80">
       <h3 className="text-xl font-bold mb-3 text-gray-800">
         Jugadores ({uniquePlayers.length})
       </h3>
