@@ -8,6 +8,8 @@ import useRoom from "../../../hooks/useRoom";
 import PlayerInvitationList from "./PlayerInvitationList";
 import { BingoBoard } from "../BingoCard/BingoBoard";
 import { v4 as uuidv4 } from 'uuid';
+import ConfirmDialog  from '../../UI/ConfirmDialog'
+import {useState} from 'react'
 
 type StartingPanelProps = {
   socket: Socket | null;
@@ -60,6 +62,13 @@ function StartingPanel({ socket }: StartingPanelProps) {
       socket?.emit("changeIdRoom", uuidRoom)
     }
   }
+
+
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const handleOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
   if (!room) {
     return null;
   }
@@ -73,8 +82,11 @@ function StartingPanel({ socket }: StartingPanelProps) {
           {/* Primera fila: BingoHost + PlayerList */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6 flex">
-              <PlayerInvitationList />
-              <button onClick={createNewRoom} className="bg-blue-500 text-white p-4 max-h-10">Generar nueva sala</button>
+              <div className="flex flex-col gap-8">
+                <PlayerInvitationList />
+                <button onClick={handleOpen} className="px-4 py-2 rounded-md flex items-center gap-2 max-h-10 bg-blue-500 hover:bg-blue-600 text-white cursor-pointer">Generar nueva sala</button>            
+              </div>
+              <ConfirmDialog onOpen={handleOpen} isOpen={isOpen} onCreateNewRoom={createNewRoom}/>
               <BingoHost
                 isHost={isHost}
                 gameStatus={room.status}
