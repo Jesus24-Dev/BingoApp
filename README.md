@@ -36,7 +36,7 @@ Sigue estos pasos para configurar el proyecto en tu entorno local:
  npm install
 ```
 
-4. **Crea un archivoo .env.development, usando .env.example como ejemplo**
+4. **Crea un archivo .env.development, usando .env.example como ejemplo**
    E ingresa tus variables de entorno
 
 ```text
