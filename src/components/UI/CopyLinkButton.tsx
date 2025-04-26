@@ -2,10 +2,9 @@ import { useState } from 'react';
 
 interface CopyLinkButton {
     linkToCopy: string
-    loadNewCard: () => void;
 }
 
-const CopyLinkButton = ({ linkToCopy, loadNewCard }: CopyLinkButton ) => {
+const CopyLinkButton = ({ linkToCopy }: CopyLinkButton ) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyClick = () => {
@@ -18,7 +17,6 @@ const CopyLinkButton = ({ linkToCopy, loadNewCard }: CopyLinkButton ) => {
         console.error('Error al copiar: ', err);
         // Opcional: Mostrar mensaje de error al usuario
       });
-      loadNewCard();
   };
 
     
