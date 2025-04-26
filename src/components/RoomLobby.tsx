@@ -9,7 +9,7 @@ type RoomLobbyProps = {
     const [playerName, setPlayerName] = useState('');
     const [searchParams] = useSearchParams();
     const roomId = searchParams.get('roomId'); 
-    const bingoCard = searchParams.get('bingoCard'); 
+    const userCards = searchParams.get('userCards'); 
     const handlePlayerName = (event: React.ChangeEvent<HTMLInputElement>) =>{
       setPlayerName(event.target.value);
     }
@@ -29,11 +29,11 @@ type RoomLobbyProps = {
                       localStorage.setItem('token', data.token);
                       handleLogin()
                   } else {
-                    if(roomId && bingoCard){
+                    if(roomId && userCards){
                       localStorage.setItem('roomId', roomId); 
                       localStorage.setItem('player', JSON.stringify(data.player));
                       localStorage.setItem('token', data.token);
-                      localStorage.setItem('bingoCardData', bingoCard);
+                      localStorage.setItem('userCardsLength', userCards);
                       handleLogin()
                     }
                   }                                     

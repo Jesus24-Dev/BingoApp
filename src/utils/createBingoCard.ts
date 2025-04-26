@@ -1,19 +1,27 @@
 import { getBingoColumnNumbers } from "./getRandomNumbers";
+import cards from '../data/bingo_cards.json';
 
 type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
 type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
-export function createBingoCard(bingoCard?: string | null): BingoCardData {
-  if (bingoCard) {
+type BingoCards = Record<number, BingoCardData>;
+
+const typedCards = cards as BingoCards;
+
+export function createBingoCard(id: number): BingoCardData {
+
     try {
-      const parsedCard = JSON.parse(bingoCard) as BingoCardData;
-      if (parsedCard.B && parsedCard.I && parsedCard.N && parsedCard.G && parsedCard.O) {
-        return parsedCard;
-      }
+      const bingoCardData = typedCards[id];
+      return {
+        B: bingoCardData.B,
+        I: bingoCardData.I,
+        N: bingoCardData.N,
+        G: bingoCardData.G,
+        O: bingoCardData.O
+      };
     } catch (e) {
-      console.error('Error al parsear bingoCardData del localStorage', e);
+      console.error('Card not fountdeed', e);
     }
-  }
   return {
     B: getBingoColumnNumbers('B'),
     I: getBingoColumnNumbers('I'),
