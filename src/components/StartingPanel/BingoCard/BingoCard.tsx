@@ -3,22 +3,21 @@ import { checkBingo } from '../../../utils/bingoPatterns';
 import { BingoPattern, BingoNumber } from '../../../types/bingo';
 import { BingoCardColumn } from './BingoCardColumn';
 import { createBingoCard } from '../../../utils/createBingoCard';
-import { useSearchParams } from 'react-router-dom';
+
 
 interface BingoCardProps {
   calledNumbers: BingoNumber[];
   onBingoClaimed?: (pattern: BingoPattern) => Promise<boolean>;
+  id: number;
 }
 
 type BingoColumn = 'B' | 'I' | 'N' | 'G' | 'O';
 type BingoCardData = Record<BingoColumn, (number | null)[]>;
 
-export function BingoCard({ calledNumbers, onBingoClaimed }: BingoCardProps) {
+export function BingoCard({ calledNumbers, onBingoClaimed, id }: BingoCardProps) {
 
-  const [searchParams] = useSearchParams();
-  const bingoCard = searchParams.get('bingoCard');
 
-  const [card] = useState<BingoCardData>(createBingoCard(bingoCard));
+  const [card] = useState<BingoCardData>(createBingoCard(id));
   
   const [winningPattern, setWinningPattern] = useState<BingoPattern | null>(null);
 
