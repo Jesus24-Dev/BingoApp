@@ -9,7 +9,8 @@ import PlayerInvitationList from "./PlayerInvitationList";
 import { BingoBoard } from "../BingoCard/BingoBoard";
 import { v4 as uuidv4 } from 'uuid';
 import ConfirmDialog  from '../../UI/ConfirmDialog'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
+import { useSearchParams } from 'react-router-dom';
 
 type StartingPanelProps = {
   socket: Socket | null;
@@ -19,7 +20,23 @@ function StartingPanel({ socket }: StartingPanelProps) {
   //TODO: Conectar el socket para establecer estas funciones
   const { room, isHost, calledNumbers, currentNumber, winner } =
     useRoom(socket);
+    const [cards, setCards] = useState<number[]>([])
+   
+    const [searchParams] = useSearchParams();
+    
+    useEffect(() => {
+      const cardsUrl = searchParams.get('cards')
 
+      if(cardsUrl){
+        const cardsParsed = JSON.parse(decodeURIComponent(cardsUrl));
+        if(cardsParsed && Array.isArray(cardsParsed)){
+          setCards(cardsParsed)
+          console.log('cardsUrl', cardsParsed)
+        }
+      }
+    }, [searchParams])
+
+    
   // Iniciar juego (solo host)
   const startGame = () => {
     if (room && isHost) {
@@ -114,7 +131,7 @@ function StartingPanel({ socket }: StartingPanelProps) {
         </div>
       ) : (
         // Diseño original para no-host
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-6">
           <div className="lg:col-span-2 space-y-6">
             <BingoHost
               isHost={isHost}
@@ -126,13 +143,18 @@ function StartingPanel({ socket }: StartingPanelProps) {
               onStartGame={startGame}
             />
           </div>
-          <div className="space-y-6">
-            <div className="bg-white p-4 rounded-xl shadow-md">
-              <BingoCard
-                calledNumbers={calledNumbers}
-                onBingoClaimed={claimBingo}
-              />
-            </div>
+          <div className="space-y-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">           
+
+              {cards.map((card) => (
+                <div className="bg-white p-4 rounded-xl shadow-md flex flex-col gap-4" key={card}>
+                <h2>Carton n°{card}</h2>
+                    <BingoCard
+                    id={card}
+                    calledNumbers={calledNumbers}
+                    onBingoClaimed={claimBingo}
+                  />      
+                </div>
+              ))} 
           </div>
         </div>
       )}
